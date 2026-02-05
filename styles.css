@@ -1,0 +1,438 @@
+/* Style inspiré du visuel ESSEC Business School : fond clair, bleu signature, typographie épurée */
+
+:root {
+  --bg: #ffffff;
+  --surface: #f8f9fa;
+  --surface-hover: #e9ecef;
+  --primary: #0066b3;
+  --primary-light: #0073cf;
+  --primary-dark: #004c8a;
+  --text: #1a1a1a;
+  --text-muted: #6c757d;
+  --border: #dee2e6;
+  --team1: #0066b3;
+  --team2: #c17f59;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 0;
+  line-height: 1.5;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.5rem 1.5rem;
+}
+
+/* Barre du haut entièrement bleue */
+header {
+  margin-bottom: 2rem;
+  background: var(--primary);
+}
+
+header .header-inner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+header .header-logo {
+  height: 48px;
+  width: auto;
+  display: block;
+  flex-shrink: 0;
+}
+
+header .header-text {
+  flex: 1;
+}
+
+h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+.subtitle {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.95rem;
+  margin-top: 0.35rem;
+  font-weight: 400;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 800px) {
+  .grid { grid-template-columns: 1fr; }
+}
+
+.card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.grid > .card:first-child,
+.grid > .card:nth-child(2) {
+  display: flex;
+  flex-direction: column;
+  min-height: 360px;
+}
+
+.card h2 {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.75rem;
+}
+
+.card h2 .badge {
+  background: var(--primary);
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+/* Formulaire inscription */
+.form-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.form-row input,
+.form-row select {
+  flex: 1;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.95rem;
+}
+
+.form-row input::placeholder {
+  color: var(--text-muted);
+}
+
+.form-row select {
+  cursor: pointer;
+  max-width: 80px;
+}
+
+.btn {
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 4px;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: var(--primary-light);
+}
+
+.btn-danger {
+  background: #c53030;
+  color: #fff;
+}
+
+.btn-danger:hover {
+  background: #e53e3e;
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.btn-outline:hover {
+  background: var(--surface-hover);
+  border-color: var(--border);
+}
+
+/* Liste inscrits */
+.inscrits-list {
+  list-style: none;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.inscrits-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.6rem;
+  border-radius: 4px;
+  margin-bottom: 0.25rem;
+  background: var(--surface);
+  border: 1px solid transparent;
+}
+
+.inscrits-list li:hover {
+  background: var(--surface-hover);
+}
+
+.inscrits-list .name {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.inscrits-list .level {
+  font-size: 0.85rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+  min-width: 28px;
+  text-align: center;
+}
+
+.level-S { background: var(--primary); color: #fff; }
+.level-A { background: #2d7dd2; color: #fff; }
+.level-B { background: #5c8ab3; color: #fff; }
+.level-C { background: #c17f59; color: #fff; }
+.level-D { background: #6c757d; color: #fff; }
+
+.inscrits-list .remove-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.25rem;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.inscrits-list .remove-btn:hover {
+  color: #c53030;
+}
+
+.empty-state {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  padding: 1rem;
+  text-align: center;
+}
+
+.session-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Équipes */
+.teams-section {
+  grid-column: 1 / -1;
+}
+
+.teams-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+@media (max-width: 600px) {
+  .teams-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.team-card {
+  border-radius: 4px;
+  padding: 1rem;
+  border: 2px solid;
+  background: var(--surface);
+}
+
+.team-card.team-1 {
+  border-color: var(--team1);
+  background: rgba(0, 102, 179, 0.06);
+}
+
+.team-card.team-2 {
+  border-color: var(--team2);
+  background: rgba(193, 127, 89, 0.08);
+}
+
+.team-card h3 {
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.team-card.team-1 h3 {
+  color: var(--primary);
+}
+
+.team-card.team-2 h3 {
+  color: #a06644;
+}
+
+.team-card ul {
+  list-style: none;
+}
+
+.team-card li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.95rem;
+}
+
+.team-card li:last-child {
+  border-bottom: none;
+}
+
+.team-total {
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Base joueurs récurrents */
+.recurring-list {
+  list-style: none;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.recurring-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.4rem 0.5rem;
+  border-radius: 4px;
+  margin-bottom: 0.2rem;
+  font-size: 0.9rem;
+}
+
+.recurring-list li:hover {
+  background: var(--surface-hover);
+}
+
+.recurring-list .add-inline {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+}
+
+.recurring-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.recurring-list .btn-edit-recurring,
+.recurring-list .btn-delete-recurring {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.85rem;
+  min-width: 32px;
+}
+
+.recurring-edit-row {
+  background: var(--surface-hover);
+}
+
+.recurring-edit-form {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.recurring-edit-form .edit-recurring-name {
+  flex: 1;
+  min-width: 80px;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+
+.recurring-edit-form .edit-recurring-level {
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  max-width: 52px;
+}
+
+.recurring-edit-actions {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.recurring-edit-form .btn-save-recurring,
+.recurring-edit-form .btn-cancel-recurring {
+  padding: 0.35rem 0.5rem;
+  font-size: 0.85rem;
+  min-width: 32px;
+}
+
+.level-select option {
+  background: var(--surface);
+}
