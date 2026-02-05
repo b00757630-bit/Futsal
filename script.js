@@ -1,9 +1,9 @@
 const STORAGE_RECURRING = 'futsal_recurring_players';
 const LEVEL_ORDER = { S: 5, A: 4, B: 3, C: 2, D: 1 };
 
-const useSupabase = !!(window.FUTSAL_SUPABASE_URL && window.FUTSAL_SUPABASE_ANON_KEY);
-const supabaseUrl = window.FUTSAL_SUPABASE_URL || '';
-const supabaseKey = window.FUTSAL_SUPABASE_ANON_KEY || '';
+const supabaseUrl = (window.FUTSAL_SUPABASE_URL || '').trim();
+const supabaseKey = (window.FUTSAL_SUPABASE_ANON_KEY || '').trim();
+const useSupabase = !!(supabaseUrl && supabaseKey);
 
 let recurringData = {};
 let inscrits = [];
@@ -20,50 +20,69 @@ function supabaseFetch(path, options = {}) {
   return fetch(url, { ...options, headers });
 }
 
+async function checkResponse(res, context) {
+  if (res.ok) return;
+  let msg = `${context}: ${res.status} ${res.statusText}`;
+  try {
+    const body = await res.text();
+    if (body) msg += ' — ' + body.substring(0, 200);
+  } catch (_) {}
+  throw new Error(msg);
+}
+
 async function apiFetchPlayers() {
   const res = await supabaseFetch('/players?select=name,level');
-  if (!res.ok) return [];
+  await checkResponse(res, 'Chargement joueurs');
   const data = await res.json();
-  return data;
+  return Array.isArray(data) ? data : [];
 }
 
 async function apiUpsertPlayer(name, level) {
-  await supabaseFetch('/players', {
+  const res = await supabaseFetch('/players', {
     method: 'POST',
     headers: { Prefer: 'resolution=merge-duplicates' },
     body: JSON.stringify({ name: name.trim(), level })
-  }).then(r => { if (!r.ok) throw new Error(r.statusText); });
+  });
+  await checkResponse(res, 'Sauvegarde joueur');
 }
 
 async function apiDeletePlayer(name) {
-  await supabaseFetch(`/players?name=eq.${encodeURIComponent(name)}`, { method: 'DELETE' });
+  const res = await supabaseFetch(`/players?name=eq.${encodeURIComponent(name)}`, { method: 'DELETE' });
+  await checkResponse(res, 'Suppression joueur');
 }
 
 async function apiFetchSession() {
   const res = await supabaseFetch("/session?id=eq.current&select=inscrits");
-  if (!res.ok) return [];
+  if (!res.ok) {
+    if (res.status === 404 || res.status === 406) return [];
+    await checkResponse(res, 'Chargement session');
+  }
   const data = await res.json();
   if (!data || data.length === 0) return [];
-  return data[0].inscrits || [];
+  const inscritsVal = data[0].inscrits;
+  return Array.isArray(inscritsVal) ? inscritsVal : [];
 }
 
 async function apiSetSessionInscrits(inscritsList) {
-  await supabaseFetch("/session?id=eq.current", {
-    method: 'PATCH',
-    body: JSON.stringify({ inscrits: inscritsList })
+  const res = await supabaseFetch("/session", {
+    method: 'POST',
+    headers: { Prefer: 'resolution=merge-duplicates' },
+    body: JSON.stringify({ id: 'current', inscrits: inscritsList })
   });
+  await checkResponse(res, 'Sauvegarde session');
 }
 
 async function apiEnsureSessionRow() {
   const res = await supabaseFetch("/session?id=eq.current&select=id");
+  if (!res.ok) return;
   const data = await res.json();
-  if (data && data.length === 0) {
-    await supabaseFetch("/session", {
-      method: 'POST',
-      headers: { Prefer: 'return=minimal' },
-      body: JSON.stringify({ id: 'current', inscrits: [] })
-    });
-  }
+  if (data && data.length > 0) return;
+  const insertRes = await supabaseFetch("/session", {
+    method: 'POST',
+    headers: { Prefer: 'return=minimal' },
+    body: JSON.stringify({ id: 'current', inscrits: [] })
+  });
+  if (!insertRes.ok && insertRes.status !== 409) await checkResponse(insertRes, 'Init session');
 }
 
 function getRecurring() {
@@ -151,7 +170,8 @@ function removeRecurringPlayer(name) {
 
 function showSyncError(err) {
   console.error('Sync Supabase:', err);
-  alert('Erreur de synchronisation. Vérifiez la console et votre configuration Supabase.');
+  const msg = err && err.message ? err.message : String(err);
+  alert('Erreur de synchronisation : ' + msg + '\n\nVérifiez que les tables Supabase existent et que les politiques RLS autorisent l\'accès (voir README).');
 }
 
 function renderRecurring() {
@@ -384,7 +404,8 @@ async function init() {
       inscrits = await apiFetchSession();
     } catch (err) {
       console.error('Chargement Supabase:', err);
-      alert('Impossible de charger les données partagées. Vérifiez config.js et les tables Supabase.');
+      const msg = err && err.message ? err.message : String(err);
+      alert('Impossible de charger les données partagées : ' + msg + '\n\nVérifiez config.js, l\'URL/clé Supabase, et que le script SQL du README a bien été exécuté.');
     }
   }
   renderRecurring();

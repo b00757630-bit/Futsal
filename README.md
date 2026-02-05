@@ -85,6 +85,14 @@ window.FUTSAL_SUPABASE_ANON_KEY = 'ta_cle_anon_publique';
 
 5. Redéploie le site (ou recharge la page). Les données sont alors lues et enregistrées dans Supabase et partagées entre tous les utilisateurs.
 
+### La synchro ne fonctionne pas ?
+
+- **Vérifier les tables** : dans Supabase → **Table Editor**, tu dois voir les tables `players` et `session`. Si elles n’existent pas, exécute tout le script SQL ci‑dessus dans **SQL Editor**.
+- **Politiques RLS** : les deux tables doivent avoir une politique qui autorise tout (SELECT, INSERT, UPDATE, DELETE). Vérifie dans **Authentication** → **Policies**.
+- **Message d’erreur** : en cas d’échec, le site affiche le message renvoyé par Supabase (ex. 401 = mauvaise clé, 404 = table absente). Ouvre aussi la **console du navigateur** (F12 → Console) pour le détail.
+- **Ligne de session** : la table `session` doit contenir une ligne avec `id = 'current'`. Le script SQL l’ajoute avec `insert into public.session ... on conflict do nothing`. Si tu as créé la table à la main, exécute :  
+  `insert into public.session (id, inscrits) values ('current', '[]'::jsonb) on conflict (id) do nothing;`
+
 ## Déploiement
 
 Le site est **100 % statique** : il suffit d’héberger les fichiers tels quels. Aucun serveur ni base de données n’est requis.
